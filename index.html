@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blum Airdrop</title>
+    <style>
+        /* Color Scheme */
+        :root {
+            --background-color: #000000; /* Black Background */
+            --text-color: #FFFFFF; /* White Text */
+            --button-background: #28a745; /* Green Button */
+            --button-hover: #218838; /* Darker green for hover */
+            --task-background: #1a1a1a; /* Darker Background for Tasks */
+            --task-border: #333333; /* Task Border Color */
+            --task-hover: #2a2a2a; /* Task Hover Color */
+        }
+
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        /* Header Styling */
+        header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        /* Logo Styling */
+        .blum-logo {
+            width: 80px; /* Initial size */
+            height: 80px;
+            margin-bottom: 10px;
+            transition: transform 0.3s;
+        }
+
+        .blum-logo:hover {
+            transform: scale(1.1); /* Slight zoom on hover */
+        }
+
+        /* Heading Styling */
+        h1 {
+            text-align: center;
+            margin: 0;
+            font-size: 24px;
+        }
+
+        /* Search Input Styling */
+        #searchInput {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            border: 1px solid var(--task-border);
+            border-radius: 4px;
+            background-color: var(--task-background);
+            color: var(--text-color);
+            box-sizing: border-box;
+        }
+
+        #searchInput::placeholder {
+            color: #cccccc;
+        }
+
+        /* Task List Styling */
+        #taskList {
+            list-style-type: none;
+            padding: 0;
+            max-height: 500px; /* Optional: Set max height for scroll */
+            overflow-y: auto;
+        }
+
+        #taskList li {
+            padding: 10px;
+            border: 1px solid var(--task-border);
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 4px;
+            background-color: var(--task-background);
+            transition: background-color 0.3s;
+        }
+
+        #taskList li:hover {
+            background-color: var(--task-hover);
+        }
+
+        /* Copy Button Styling */
+        .copy-button {
+            padding: 5px 10px;
+            background-color: var(--button-background);
+            color: var(--text-color);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 14px;
+        }
+
+        .copy-button:hover {
+            background-color: var(--button-hover);
+        }
+
+        /* Responsive Design */
+        @media (min-width: 600px) {
+            .blum-logo {
+                width: 100px;
+                height: 100px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            #searchInput {
+                font-size: 18px;
+            }
+
+            .copy-button {
+                font-size: 16px;
+            }
+        }
+
+        /* Notification Styling */
+        .copy-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 10px 20px;
+            border: 1px solid var(--task-border);
+            border-radius: 5px;
+            opacity: 0.9;
+            transition: opacity 0.5s;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+<header>
+    <!-- SVG Logo -->
+    <svg class="blum-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" aria-label="Blum Logo" title="Blum Logo">
+        <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-size="40" fill="white" font-family="monospace">
+            B
+        </text>
+    </svg>
+    <h1>Blum Academy Codes</h1>
+</header>
+
+    <!-- Search Input -->
+    <input type="text" id="searchInput" placeholder="Search tasks..." onkeyup="filterTasks()">
+
+    <!-- Task List -->
+<ul id="taskList">
+    <li>
+        <span>Liquidity Pools Guide</span>
+        <button class="copy-button" onclick="copyToClipboard('BLUMERSSS')">Copy</button>
+    </li>
+    <li>
+        <span>What are AMMs?</span>
+        <button class="copy-button" onclick="copyToClipboard('CRYPTOSMART')">Copy</button>
+    </li>
+    <li>
+        <span>Say No To Rug Pull!</span>
+        <button class="copy-button" onclick="copyToClipboard('SUPERBLUM')">Copy</button>
+    </li>
+    <li>
+        <span>What are Telegram Mini Apps?</span>
+        <button class="copy-button" onclick="copyToClipboard('CRYPTOBLUM')">Copy</button>
+    </li>
+    <li>
+        <span>Navigating Crypto</span>
+        <button class="copy-button" onclick="copyToClipboard('HEYBLUM')">Copy</button>
+    </li>
+    <li>
+        <span>Secure your Crypto!</span>
+        <button class="copy-button" onclick="copyToClipboard('BEST PROJECT EVER')">Copy</button>
+    </li>
+    <li>
+        <span>Forks Explained</span>
+        <button class="copy-button" onclick="copyToClipboard('GO GET')">Copy</button>
+    </li>
+    <li>
+        <span>To Analyze Crypto</span>
+        <button class="copy-button" onclick="copyToClipboard('VALUE')">Copy</button>
+    </li>
+</ul>
+
+    <!-- Notification -->
+    <div class="copy-notification" id="notification" style="display:none;">
+        Code copied to clipboard!
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Filter function for searching tasks
+        function filterTasks() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const taskList = document.getElementById('taskList');
+            const tasks = taskList.getElementsByTagName('li');
+
+            for (let i = 0; i < tasks.length; i++) {
+                const task = tasks[i].getElementsByTagName('span')[0];
+                if (task) {
+                    const txtValue = task.textContent || task.innerText;
+                    tasks[i].style.display = txtValue.toLowerCase().includes(filter) ? "" : "none";
+                }
+            }
+        }
+
+        // Copy to clipboard function
+        function copyToClipboard(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                const notification = document.getElementById('notification');
+                notification.style.display = 'block';
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
