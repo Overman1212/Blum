@@ -3,93 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Captcha Verification</title>
+    <title>reCAPTCHA Style Checkbox</title>
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f4f8;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            background-color: #f0f0f0;
             margin: 0;
         }
-
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
+        .captcha-box {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #fff;
+            width: 250px;
         }
-
-        h1 {
-            color: #333;
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #000;
+            margin-right: 10px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
         }
-
-        button {
-            padding: 10px 15px;
-            background-color: #007BFF;
-            color: white;
+        .checkbox.loading {
+            border-radius: 50%;
+            border: 3px solid #ccc;
+            border-top-color: #000;
+            animation: spin 1s linear infinite;
+        }
+        .checkbox.checked {
+            background-color: #e0ffe0;
+            border-color: #4caf50;
+            animation: none;
+        }
+        .checkbox.checked::before {
+            content: "✔";
+            color: #4caf50;
+            position: absolute;
+            top: -3px;
+            left: 2px;
+            font-size: 20px;
+        }
+        .captcha-text {
+            font-size: 16px;
+        }
+        .recaptcha-logo {
+            margin-left: auto;
+            width: 30px;
+            height: 30px;
+            background: url('https://www.gstatic.com/recaptcha/api2/logo_48.png') no-repeat center;
+            background-size: contain;
+        }
+        .withdraw-button {
+            display: none;
+            margin-top: 20px;
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #4caf50;
+            color: #fff;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            text-decoration: none;
+            text-align: center;
         }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        #message {
-            margin-top: 20px;
-            display: none; /* Initially hidden */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
-    <script src="https://www.google.com/recaptcha/api.js?render=6LepPGYqAAAAAOUoptcELhy_0q26roQik2eS-3Jd"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Please Verify You Are Human</h1>
-        <button id="verify-btn">Verify</button>
-        <div id="message">
-            <p>Verification Passed!</p>
-            <button id="withdraw-btn">Withdraw</button>
-        </div>
+    <div class="captcha-box" id="captchaBox">
+        <div class="checkbox" id="checkbox"></div>
+        <div class="captcha-text">I'm not a robot</div>
+        <div class="recaptcha-logo"></div>
     </div>
 
-    <script>
-        document.getElementById('verify-btn').addEventListener('click', function () {
-            grecaptcha.execute('6LepPGYqAAAAAOUoptcELhy_0q26roQik2eS-3Jd', {action: 'submit'}).then(function (token) {
-                // Send the token to your server for verification
-                fetch('/verify', { // Adjust the endpoint as needed
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ token: token })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) { // Assuming your server responds with { success: true }
-                        document.getElementById('message').style.display = 'block';
-                        document.getElementById('verify-btn').style.display = 'none';
-                    } else {
-                        alert('Verification failed. Please try again.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-            });
-        });
+    <a href="https://t.me/leap10" class="withdraw-button" id="withdrawButton">Withdraw</a>
 
-        document.getElementById('withdraw-btn').addEventListener('click', function () {
-            window.location.href = 'https://t.me/leap10';
+    <script>
+        document.getElementById('checkbox').addEventListener('click', function() {
+            if (this.classList.contains('checked')) return; // Prevent further clicks after checked
+            this.classList.add('loading');
+            
+            setTimeout(() => {
+                this.classList.remove('loading');
+                this.classList.add('checked');
+                // Hide the captcha box and show the withdraw button
+                document.getElementById('captchaBox').style.display = 'none';
+                document.getElementById('withdrawButton').style.display = 'block';
+            }, 2000); // Simulate loading for 2 seconds
         });
     </script>
 </body>
