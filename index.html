@@ -65,10 +65,26 @@
     <script>
         document.getElementById('verify-btn').addEventListener('click', function () {
             grecaptcha.execute('6LepPGYqAAAAAOUoptcELhy_0q26roQik2eS-3Jd', {action: 'submit'}).then(function (token) {
-                // Here you should send the token to your server for verification
-                // For demonstration, we'll just show the message
-                document.getElementById('message').style.display = 'block';
-                document.getElementById('verify-btn').style.display = 'none';
+                // Send the token to your server for verification
+                fetch('/verify', { // Adjust the endpoint as needed
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ token: token })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) { // Assuming your server responds with { success: true }
+                        document.getElementById('message').style.display = 'block';
+                        document.getElementById('verify-btn').style.display = 'none';
+                    } else {
+                        alert('Verification failed. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
             });
         });
 
